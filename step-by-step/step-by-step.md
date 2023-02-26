@@ -1,4 +1,8 @@
 # step by step manual  
+## 0. Overview  
+System architecture  
+![System architecture](../docs/images/rproxy-outline.png)   
+
 ## 1. web server A  
 ```bash
 echo "<html><head><title> A </title><meta http-equiv='Content-Type' content='text/html; charset=utf-8' /></head><body><h1> A </h1></body></html>" > ~/index.html 
@@ -12,8 +16,12 @@ sudo docker run -d --rm -v ~/index.html:/usr/share/nginx/html/index.html -p 8881
 sudo docker run -itd --rm --name jupyter -p 8888:8888 shwsun/jupyter-spark jupyter lab --allow-root --ip='*' --NotebookApp.allow_origin='*' --NotebookApp.notebook_dir='/tf' --workspace='/tf' --NotebookApp.token='' --NotebookApp.password=''  --NotebookApp.base_url='/jupyter'   
 # # Ctrl + p, Ctrl + q 
 ```
-
-## 3. http proxy  
+## 3. jupyter lab web server 2    
+```bash
+sudo docker run -itd --rm --name jupyter -p 8888:8888 shwsun/jupyter-spark jupyter lab --allow-root --ip='*' --NotebookApp.allow_origin='*' --NotebookApp.notebook_dir='/tf' --workspace='/tf' --NotebookApp.token='' --NotebookApp.password=''  --NotebookApp.base_url='/jupyter2'   
+# # Ctrl + p, Ctrl + q 
+```
+## 4. http proxy  
 - run apache reverse proxy server  
 ```bash
 # 3. apache docker run
@@ -28,11 +36,11 @@ apt-get install -y procps
 # hosts 편집  
 
 # httpd conf 편집  : ServerName, mod_proxy, mod_proxy_http, access_log, error_log , Include vhosts.conf
-vi /usr/local/apache2/conf/httpd.conf  
-#sudo docker cp httpd.conf proxy:/usr/local/apache2/conf/httpd.conf
+# vi /usr/local/apache2/conf/httpd.conf  
 # mod_proxy.so, mod_proxy_http.so, mod_proxy_wstunnel.so
-vi /usr/local/apache2/conf/extra/httpd-vhosts.conf  
-#sudo docker cp ./extra/httpd-vhosts.conf proxy:/usr/local/apache2/conf/extra/httpd-vhosts.conf 
+# vi /usr/local/apache2/conf/extra/httpd-vhosts.conf  
+sudo docker cp httpd.conf proxy:/usr/local/apache2/conf/httpd.conf
+sudo docker cp ./extra/httpd-vhosts.conf proxy:/usr/local/apache2/conf/extra/httpd-vhosts.conf 
 
 # apache 재시작  
 /usr/local/apache2/bin/apachectl restart
