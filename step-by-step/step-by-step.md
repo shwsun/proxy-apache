@@ -14,15 +14,17 @@ sudo docker run -d --rm -v ~/index.html:/usr/share/nginx/html/index.html -p 8881
 ```bash
 # sudo docker run -itd --rm --name jupyter -p 8888:8888 shwsun/jupyter-spark jupyter lab --allow-root --ip='*' --NotebookApp.allow_origin='*' --NotebookApp.notebook_dir='/tf' --workspace='/tf' --NotebookApp.token='' --NotebookApp.password='' --NotebookApp.base_url='/jupyter'
 sudo docker run -itd --rm --name jupyter -p 8888:8888 shwsun/jupyter-spark jupyter lab --allow-root --ip='*' --NotebookApp.allow_origin='*' --NotebookApp.notebook_dir='/tf' --workspace='/tf' --NotebookApp.base_url='/jupyter'   
-sudo docker run -it --rm --name jupyter -p 8888:8888 shwsun/jupyter-spark jupyter lab --allow-root --ip='*' --NotebookApp.allow_origin='*' --NotebookApp.notebook_dir='/tf' --workspace='/tf' --NotebookApp.base_url='/jupyter'  
+sudo docker run -it --rm --name jupyter1 -p 8888:8888 shwsun/jupyter-spark jupyter lab --allow-root --ip='*' --NotebookApp.allow_origin='*' --NotebookApp.notebook_dir='/tf' --workspace='/tf' --NotebookApp.base_url='/jupyter1' --NotebookApp.trust_xheaders=True 
+--NotebookApp.ip='localhost'
 # to get login token  
-sudo docker exec -it jupyter /bin/bash -c "echo 'this is a.'>/tf/jupyter.txt"
-sudo docker exec -it jupyter jupyter server list  
+sudo docker exec -it jupyter1 /bin/bash -c "echo 'this is #1.'>/tf/jupyter1.txt"
+sudo docker exec -it jupyter1 jupyter server list  
 ```
 ## 3. jupyter lab web server 2    
 ```bash
-sudo docker run -itd --rm --name jupyter2 -p 8889:8888 shwsun/jupyter-spark jupyter lab --allow-root --ip='*' --NotebookApp.allow_origin='*' --NotebookApp.notebook_dir='/tf' --workspace='/tf' 
+sudo docker run -it --rm --name jupyter2 -p 8889:8888 shwsun/jupyter-spark jupyter lab --allow-root --ip='*' --NotebookApp.allow_origin='*' --NotebookApp.notebook_dir='/tf' --workspace='/tf' --NotebookApp.base_url='/jupyter2' --NotebookApp.trust_xheaders=True 
 # to get login token  
+sudo docker exec -it jupyter2 /bin/bash -c "echo 'this is #2.'>/tf/jupyter2.txt"
 sudo docker exec -it jupyter2 jupyter server list  
 ```
 ## 4. http proxy  
@@ -69,6 +71,6 @@ sudo docker exec -it proxy apachectl restart
 
 - jupyter2를 /로 다시 실행합니다.  
 ```bash
-sudo docker run -it --rm --name jupyter2 -p 8889:8888 shwsun/jupyter-spark jupyter lab --allow-root --ip='*' --NotebookApp.allow_origin='*' --NotebookApp.notebook_dir='/tf' --workspace='/tf'
+sudo docker run -it --rm --name jupyter2 -p 8889:8888 shwsun/jupyter-spark jupyter lab --allow-root --ip='*' --NotebookApp.allow_origin='*' --NotebookApp.notebook_dir='/tf' --workspace='/tf' --NotebookApp.base_url='/jupyter2' --NotebookApp.trust_xheaders=True  
 ```
 
